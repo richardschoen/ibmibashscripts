@@ -1,2 +1,2 @@
 # ibmibashscripts
-Bash Scripts for use in PASE, QShell on IBM i 
+This repository will be a home for useful bash scripts on IBM i 
