@@ -7,6 +7,9 @@ One thing you will notice is that I like verbose documentation :-)
 
 Feel free to submit requests or input in the Issues section as well
 
+## ibmibashtemplate.sh
+This bash script can serve as a good starter template for your bash scripts. 
+
 ## savlibifs.sh
 Save IBM i Library to IFS based Save File
 
