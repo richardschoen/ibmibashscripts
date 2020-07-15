@@ -2,10 +2,7 @@
 #----------------------------------------------------------------
 # Script name: savlibifs.sh
 # Purpose: Save an IBM i library to a PC/IFS save file
-# Parameters:
-# 1.) LibraryName to save
-# 2.) TO IFS file containing save file data
-# 3.) Replace IFS file if found. N-No Y-Yes
+# Parameters: See the usage() function
 #---------------------------------------------------------------- 
 
 #Blow up on any errors
@@ -13,15 +10,45 @@
 
 PATH="/QOpenSys/usr/bin:/usr/ccs/bin:/QOpenSys/usr/bin/X11:/usr/sbin:.:/usr/bin:/QOpenSys/pkgs/bin:$path"
 export PATH
+
 PROGNAME=$(basename $0)
+
+# ---------------------------------------------------------------- 
+# Functions
+# ---------------------------------------------------------------- 
+
+function usage() {
+#----------------------------------------------------------------
+# Function to show command line usage 
+#----------------------------------------------------------------
+    SCRIPT="$(basename -- $0)"
+    echo -e "\
+Usage:\t$SCRIPT [options]
+Desc: This script saves an IBM i library to a temporary save file and copies to an IFS file
+
+OPTIONS
+  -h, --help       Display this help text
+  -l, --library    IBM i library                 **required**
+  -o, --outputfile IBM output IFS file           **required**
+  -r, --replace    Replace IFS file if found     **required**"
+}
+
+print_cli_error() {
+#----------------------------------------------------------------
+# Function to print cli error 
+#----------------------------------------------------------------   
+    echo -e "\e[31m$1\n\e[39m"
+    usage
+    exit 1
+}
 
 function error_exit
 {
-#   ----------------------------------------------------------------
-#   Function for exit due to fatal program error
-#       Accepts 1 argument:
-#           string containing descriptive error message
-#   ---------------------------------------------------------------- 
+#----------------------------------------------------------------
+# Function for exit due to fatal program error
+# Accepts 1 argument:
+# string containing descriptive error message
+#---------------------------------------------------------------- 
 
     echo "//-----------------------------------------------------------"    
     echo "//${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
@@ -29,16 +56,56 @@ function error_exit
     exit 1
 }
 
-# Make sure our arguments are passed
-if [ $# -lt 3 ]
-then
-  error_exit "Missing parameters. Script needs [LibraryNameToSave] [OutputToIFSFile] [Replace-Y/N]. Process cancelled." 
+# ---------------------------------------------------------------- 
+# Loop to extract the command line parms and make sure all required are specified
+# ---------------------------------------------------------------- 
+for opts in "$@"
+do
+case $opts in
+    -h | --help) # Show command usage
+       usage
+       exit
+       ;;
+
+    -l=*|--library=*)
+       LIBRARY="${opts#*=}"
+       LIBRARY=${LIBRARY^^} #convert to uppercase       
+       shift # past argument=value
+       ;;
+    -o=*|--outputfile=*)
+       OUTPUTFILE="${opts#*=}"
+       shift # past argument=value
+       ;;
+    -r=*|--replace=*)
+       REPLACE="${opts#*=}"
+       REPLACE=${REPLACE^^} #convert to uppercase              
+       shift # past argument=value
+       ;;
+    --default)
+       DEFAULT=YES
+       shift # past argument with no value
+       ;;
+    *)
+          # unknown option
+    ;;
+esac
+done
+
+# ---------------------------------------------------------------- 
+# Make sure required parms are specified. Bail out if not.
+# ---------------------------------------------------------------- 
+if [[ -z "$LIBRARY" || -z "$OUTPUTFILE" ||-z "$REPLACE"  ]]; then
+    # Output the required parm selected values for reference
+    echo "Current parameter values:"
+    echo "LIBRARY      = $LIBRARY"
+    echo "OUTPUTFILE   = $OUTPUTFILE"
+    echo "REPLACE      = $REPLACE"
+    ERROR="ERROR: Missing at least one required option"
+    REQUIRED="[-l,--library] [-o,--outputfile] [-r,--replace]"
+    print_cli_error "$ERROR\nRequired options: $REQUIRED"
 fi
 
-# Get passed parm arguments
-LIBRARY=$1
-TOIFSFILE=$2
-REPLACEFILE=$3
+# Build work variables
 DATESTAMP=$(date +%Y%m%d)
 TIMESTAMP=$(date +%H%M%S)
 #Build temp save file T + Epoch data last 9 digits
@@ -47,26 +114,27 @@ SAVFNAME="T${SAVFNAME:1:9}"
 SAVFLIB="TMP"
 
 # Replace any timestamp in file name templates to build IFS file name
-TOIFSFILE=${TOIFSFILE/@@DATETIME/$DATESTAMP$TIMESTAMP}
-TOIFSFILE=${TOIFSFILE/@@DATE/$DATESTAMP}
-TOIFSFILE=${TOIFSFILE/@@TIME/$TIMESTAMP}
+OUTPUTFILE=${OUTPUTFILE/@@DATETIME/$DATESTAMP$TIMESTAMP}
+OUTPUTFILE=${OUTPUTFILE/@@DATE/$DATESTAMP}
+OUTPUTFILE=${OUTPUTFILE/@@TIME/$TIMESTAMP}
 
 echo "//-----------------------------------------------------------"
-echo "//Start Process - Save IBM i Library $LIBRARY to IFS File $TOIFSFILE - $(date)"
+echo "//Start Process - Save IBM i Library $LIBRARY to IFS File $OUTPUTFILE - $(date)"
 echo "//-----------------------------------------------------------"
 
 # Check for IFSoutput file exists already and bail if replace <> "Y" 
-if [ -f "$TOIFSFILE" ]; then
-    if [ $REPLACEFILE == "Y" ]; then
-       rm "$TOIFSFILE" # Remove existing file
+if [ -f "$OUTPUTFILE" ]; then
+    if [ $REPLACE == "Y" ]; then
+       echo "Deleting existing IFS output file $OUTPUTFILE before processing."
+       rm "$OUTPUTFILE" # Remove existing file
        if [ $? -ne 0 ]; then
-          error_exit "Error deleting IFS file $TOIFSFILE. Process cancelled."
+          error_exit "Error deleting IFS file $OUTPUTFILE. Process cancelled."
        fi
     else
-       error_exit "Output IFS file $TOIFSFILE exists and replace not selected. Process cancelled."
+       error_exit "Output IFS file $OUTPUTFILE exists and replace not selected. Process cancelled."
     fi 
 else 
-    echo "//Output file $TOIFSFILE does not exist. Process will run."
+    echo "//Output file $OUTPUTFILE does not exist. Process will run."
 fi
 
 # Make sure TMP library exists and also create temporary backup save file
@@ -90,19 +158,19 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "//-----------------------------------------------------------"
-echo "//Copying library $LIBRARY save file to $TOIFSFILE now..."
+echo "//Copying library $LIBRARY save file to $OUTPUTFILE now..."
 echo "//-----------------------------------------------------------"
-system -v "CPYTOSTMF FROMMBR('/QSYS.LIB/$SAVFLIB.LIB/$SAVFNAME.FILE') TOSTMF('$TOIFSFILE') STMFOPT(*REPLACE) CVTDTA(*NONE) STMFCCSID(*STMF)"
+system -v "CPYTOSTMF FROMMBR('/QSYS.LIB/$SAVFLIB.LIB/$SAVFNAME.FILE') TOSTMF('$OUTPUTFILE') STMFOPT(*REPLACE) CVTDTA(*NONE) STMFCCSID(*STMF)"
 if [ $? -ne 0 ]; then
    error_exit "Error running CPYTOSTMF. Process cancelled."
 else
     # Check for IFSoutput file exists already and bail if replace <> "Y" 
-    if [ ! -f "$TOIFSFILE" ]; then
-        error_exit "Output IFS file $TOIFSFILE does not exist. Save library to IFS failed."
+    if [ ! -f "$OUTPUTFILE" ]; then
+        error_exit "Output IFS file $OUTPUTFILE does not exist. Save library to IFS failed."
     else 
        echo "//-----------------------------------------------------------"
-       echo "//Output IFS file $TOIFSFILE exists. Save library to IFS was successful."
-       echo "//Completion: Library $LIBRARY was saved to IFS file $TOIFSFILE"
+       echo "//Output IFS file $OUTPUTFILE exists. Save library to IFS was successful."
+       echo "//Completion: Library $LIBRARY was saved to IFS file $OUTPUTFILE"
        echo "//-----------------------------------------------------------"
     fi   
 fi
@@ -117,5 +185,5 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "//-----------------------------------------------------------"
-echo "//End Process - Save IBM i Library $LIBRARY to IFS File $TOIFSFILE - $(date)"
+echo "//End Process - Save IBM i Library $LIBRARY to IFS File $OUTPUTFILE - $(date)"
 echo "//-----------------------------------------------------------"
