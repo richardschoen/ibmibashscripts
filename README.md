@@ -16,7 +16,7 @@ Save IBM i Library to IFS based Save File
 ## rstlibifs.sh
 Restore IBM i Library from IFS based Save File
 
-## cpysrctoifs.sh
+## cpysrctoifs.sh - Copy Source Member from Library to IFS File
 Copy source member to IFS file path from library with minimal parameter entry.
 The only requirement is to specify the IFS file name and from within the specifed IFS directory from bash shell
 
@@ -27,7 +27,7 @@ cd /gitrepos/QGPL/QCLSRC
 cpysrctoifs.sh SAMPLE.CLP
 ```
 
-## cpyifstosrc.sh
+## cpyifstosrc.sh - Copy IFS File to Source Member in Library
 Copy IFS source member to source member in library with minimal parameter entry.
 P1-The only requirement is to specify the IFS file name (no dir path) from within the specifed IFS directory from bash shell.
 P2-Optional - Replace source member in library. [Y/N] Default :Y
