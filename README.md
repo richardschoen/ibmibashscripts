@@ -29,7 +29,7 @@ cpysrctoifs.sh SAMPLE.CLP
 ```
 
 ## cpyifstosrc.sh - Copy IFS File to Source Member in Library
-Copy IFS source member to source member in library with minimal parameter entry.
+Copy IFS source member to source member in library with minimal parameter entry.  
 **P1** - Source from IFS file name (no dir path) from within the specifed IFS directory in bash or other PASE shell. Destination library/file.member is automatically derived from the IFS directory path structure.  Ex: /gitrepos/srclibrary/srcfile/srcmember.srctype  
 **P2-Optional** - Replace source member in library. [Y/N] Default :Y
 
