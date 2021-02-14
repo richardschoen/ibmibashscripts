@@ -96,7 +96,7 @@ while [ "$topdir" != "/" ];do
 done
 
 # Extract useful path values. Passed in filename path parameters are parsed in reverse order.
-srcpcfile="${parse[1]}" # Extract the PC file name (pass file nmame only)
+srcpcfile="${parse[1]}" # Extract the PC file name (pass file name only)
 srcfile="${parse[2]^^}"   # Extract source file name from current directory path
 srclib="${parse[3]^^}"    # Extract source library name from current directory path 
 srcmember=`echo "${srcpcfile^^}" | cut -d'.' -f1`  # Parse PC file name prefix to member name
