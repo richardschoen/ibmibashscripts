@@ -29,7 +29,8 @@ Sample bash/PASE command line sequence to copy from source file to IFS location:
 cd /gitrepos/QGPL/QCLSRC
 cpysrctoifs.sh SAMPLE.CLP
 
-Note: Once your current directory is set to the appropriate directory in the terminal (via cd /dirpath) you don't need to use the cd operation again until you want to change to another source directory in the IFS.
+Note: Once your current directory is set to the appropriate directory in the terminal (via cd /dirpath)   
+you don't need to use the cd operation again until you want to change to another source directory in the IFS.
 ```
 
 ## cpyifstosrc.sh - Copy IFS File to Source Member in Library
@@ -45,6 +46,7 @@ Sample bash/PASE command line sequence to copy from IFS location to source file:
 cd /gitrepos/QGPL/QCLSRC
 cpyifstosrc.sh SAMPLE.CLP
 
-Note: Once your current directory is set to the appropriate directory in the terminal (via cd /dirpath) you don't need to use the cd operation again until you want to change to another source directory in the IFS.
+Note: Once your current directory is set to the appropriate directory in the terminal (via cd /dirpath)   
+you don't need to use the cd operation again until you want to change to another source directory in the IFS.
 
 ```
