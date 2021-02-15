@@ -30,6 +30,17 @@ cpysrctoifs.sh SAMPLE.CLP
 Note: Once your current directory is set to the appropriate directory in the terminal (via cd /dirpath)   
 you don't need to use the cd operation again until you want to change to another source directory in the IFS.
 ```
+
+:exclamation: ***Make things even easier. Skip typing the .sh at runtime***
+```
+First, create a symbolic link to cpysrctoifs.sh in /QOpenSys/pkgs/bin pointing to your script directory (mine is /ibmibashscripts): 
+ln -s /ibmibashscripts/cpysrctoifs.sh /QOpenSys/pkgs/bin/cpysrctoifs
+
+Sample bash/PASE command line sequence to copy from IFS location to source file:
+cd /gitrepos/QGPL/QCLSRC
+cpysrctoifs SAMPLE.CLP
+```
+
 The **cpyifstosrc.sh** bash command can be used to copy an IFS file edited by VS Code, etc back to a library based source member after editing. Simply change to the directory where the source member resides and run the script with the source member IFS file name.
 
 Example to copy an IFS file named: /gitrepos/QGPL/QCLSRC/SAMPLE.CLP to source file member QGPL/QCLSRC(SAMPLE), Type: CLP to relative IFS output path for editing
@@ -44,7 +55,7 @@ you don't need to use the cd operation again until you want to change to another
 
 :exclamation: ***Make things even easier. Skip typing the .sh at runtime***
 ```
-First, create a symbolic link to cpyifstosrc.sh in /QOpenSys/pkgs/bin pointing to your script directory:
+First, create a symbolic link to cpyifstosrc.sh in /QOpenSys/pkgs/bin pointing to your script directory (mine is /ibmibashscripts): 
 ln -s /ibmibashscripts/cpyifstosrc.sh /QOpenSys/pkgs/bin/cpyifstosrc  
 
 Sample bash/PASE command line sequence to copy from IFS location to source file:
