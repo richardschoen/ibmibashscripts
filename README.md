@@ -42,6 +42,10 @@ Note: Once your current directory is set to the appropriate directory in the ter
 you don't need to use the cd operation again until you want to change to another source directory in the IFS.
 ```
 
+:exclamation: `:exclamation:`
+ln -s /ibmibashscripts/cpyifstosrc.sh /QOpenSys/pkgs/bin/cpyifstosrc
+
+
 ## cpysrctoifs.sh - Copy Source Member from Library to IFS File
 Easily copy source member to IFS file path from library with minimal parameter entry for editing with Visual Studio Code, Notespad++ or other editors that can open and save IFS files.
 
