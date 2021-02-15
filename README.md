@@ -19,7 +19,7 @@ Restore IBM i Library from IFS based Save File
 ## Editing IBM i Source Members using Visual Studio Code or other editors
 IBM i developers who are using Visual Studio Code, Notepad++ and other PC based editors to edit source code can now more easily edit source members that originate from an IBM i source file. Library based source members can be quickly copied to an IFS file so they can be edited out of the IFS.
 
-The **cpysrctoifs.sh** bash script can be used to quickly copy a library based source member to an IFS file where it can be directly edited with VS Code, etc. Simply change to the directory where the source member resides and run te script with the source member IFS file name.
+The **cpysrctoifs.sh** bash script can be used to quickly copy a library based source member to an IFS file where it can be directly edited with VS Code, etc. Simply change to the directory where the source member resides and run the script with the source member IFS file name.
 
 Example to copy a source file member from QGPL/QCLSRC(SAMPLE), Type: CLP to relative IFS output path for editing 
 ```
@@ -30,7 +30,7 @@ cpysrctoifs.sh SAMPLE.CLP
 Note: Once your current directory is set to the appropriate directory in the terminal (via cd /dirpath)   
 you don't need to use the cd operation again until you want to change to another source directory in the IFS.
 ```
-The **cpyifstosrc.sh** bash command can be used to copy an IFS file edited by VS Code, etc back to a library based source member after editing. Simply change to the directory where the source member resides and run te script with the source member IFS file name.
+The **cpyifstosrc.sh** bash command can be used to copy an IFS file edited by VS Code, etc back to a library based source member after editing. Simply change to the directory where the source member resides and run the script with the source member IFS file name.
 
 Example to copy an IFS file named: /gitrepos/QGPL/QCLSRC/SAMPLE.CLP to source file member QGPL/QCLSRC(SAMPLE), Type: CLP to relative IFS output path for editing
 ```
