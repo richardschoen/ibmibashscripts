@@ -111,7 +111,7 @@ TIMESTAMP=$(date +%H%M%S)
 #Build temp save file T + Epoch data last 9 digits
 SAVFNAME=$(date +"%s")
 SAVFNAME="T${SAVFNAME:1:9}" 
-SAVFLIB="TMP"
+SAVFLIB="TMPOBJ"
 
 # Replace any timestamp in file name templates to build IFS file name
 OUTPUTFILE=${OUTPUTFILE/@@DATETIME/$DATESTAMP$TIMESTAMP}
